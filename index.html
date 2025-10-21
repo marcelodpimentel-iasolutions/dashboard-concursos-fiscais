@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Concursos Fiscais</title>
+    
+    <!-- Dependências Externas -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> <!-- Plotly para os gráficos -->
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Dashboard de Concursos Fiscais</h1>
+        <button id="update-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6"/><path d="M22 11.5A10 10 0 0 1 3.2 7.2M2 12.5a10 10 0 0 1 18.8 4.2"/></svg>Atualizar com IA
+        </button>
+        
+        <h2>Mapa de Oportunidades</h2>
+        <div id="map"></div>
+        
+        <h2>Tabela de Concursos</h2>
+        <input type="text" id="search-input" placeholder="Buscar por concurso, status, salário...">
+        <table class="styled-table" id="concursos-table">
+            <thead>
+                <tr>
+                    <th>Concurso</th>
+                    <th>Status</th>
+                    <th>Salário Inicial</th>
+                    <th>Data da Prova</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Conteúdo gerado pelo JavaScript -->
+            </tbody>
+        </table>
+
+        <!-- NOVA SEÇÃO DE GRÁFICOS -->
+        <h2>Visualizações</h2>
+        <div id="salary-chart"></div>
+
+    </div>
+
+    <!-- ESTRUTURA DO MODAL -->
+    <div id="modal-overlay" class="hidden">
+        <div id="modal-content">
+            <h2 id="modal-title">Detalhes do Concurso</h2>
+            <div id="modal-body"></div>
+            <button id="modal-close-btn">Fechar</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
