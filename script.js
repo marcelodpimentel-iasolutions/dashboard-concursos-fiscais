@@ -32,7 +32,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- FUNÇÃO PRINCIPAL DE INICIALIZAÇÃO ---
     const initializeDashboard = async () => {
         try {
-            const response = await fetch(GIST_URL);
+            // const response = await fetch(GIST_URL);
+            // Adiciona um parâmetro anti-cache para garantir que os dados mais recentes sejam buscados
+            const urlComAntiCache = `${GIST_URL}?v=${new Date().getTime()}`;
+            const response = await fetch(urlComAntiCache);
+
             if (!response.ok) { throw new Error(`HTTP error! status: ${response.status}`); }
             const data = await response.json();
             
