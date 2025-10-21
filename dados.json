@@ -1,0 +1,25 @@
+{
+  "concursos": [
+    { "id": 1, "nome": "Sefaz PR", "status": "Edital Publicado", "salario": 12960.00, "prova": "2026-01-25", "lat": -25.42, "lon": -49.27, "banca": "Cebraspe", "requisitos": "Nível Superior em qualquer área.", "link": "https://www.cebraspe.org.br/concursos/SEFAZ_PR_25" },
+    { "id": 2, "nome": "ISS São José do Rio Preto (SP )", "status": "Edital Publicado", "salario": 17351.00, "prova": "2026-01-18", "lat": -20.82, "lon": -49.37, "banca": "Vunesp", "requisitos": "Nível Superior em Direito, Ciências Contábeis, Economia ou Administração.", "link": "https://www.vunesp.com.br/PMSR2401" },
+    { "id": 3, "nome": "Sefaz GO", "status": "Edital Iminente", "salario": 27247.26, "prova": "9999-12-31", "lat": -16.68, "lon": -49.25, "banca": "A definir", "requisitos": "Nível Superior em qualquer área.", "link": "https://www.google.com/search?q=concurso+sefaz+go" },
+    { "id": 4, "nome": "ISS Manaus (AM )", "status": "Edital Iminente", "salario": 24817.05, "prova": "9999-12-31", "lat": -3.11, "lon": -60.02, "banca": "A definir", "requisitos": "Nível Superior.", "link": "https://www.google.com/search?q=concurso+iss+manaus" },
+    { "id": 5, "nome": "Sefaz SP (Auditor )", "status": "Edital Iminente", "salario": 21177.10, "prova": "9999-12-31", "lat": -23.55, "lon": -46.63, "banca": "FGV (provável)", "requisitos": "Nível Superior em qualquer área.", "link": "https://www.google.com/search?q=concurso+sefaz+sp+auditor" },
+    { "id": 6, "nome": "ISS Porto Velho (RO )", "status": "Edital Iminente", "salario": 32301.00, "prova": "9999-12-31", "lat": -8.76, "lon": -63.90, "banca": "A definir", "requisitos": "Nível Superior.", "link": "https://www.google.com/search?q=concurso+iss+porto+velho" },
+    { "id": 7, "nome": "Sefaz RN", "status": "Edital Iminente", "salario": 13283.00, "prova": "9999-12-31", "lat": -5.79, "lon": -35.20, "banca": "Cebraspe", "requisitos": "Nível Superior.", "link": "https://www.google.com/search?q=concurso+sefaz+rn" },
+    { "id": 8, "nome": "Sefa PA", "status": "Autorizado", "salario": 16659.63, "prova": "9999-12-31", "lat": -1.45, "lon": -48.49, "banca": "A definir", "requisitos": "Nível Superior.", "link": "https://www.google.com/search?q=concurso+sefa+pa" },
+    { "id": 9, "nome": "ISS Belém (PA )", "status": "Autorizado", "salario": 16659.63, "prova": "9999-12-31", "lat": -1.455, "lon": -48.495, "banca": "A definir", "requisitos": "Nível Superior.", "link": "https://www.google.com/search?q=concurso+iss+belem" },
+    { "id": 10, "nome": "ISS Planaltina (GO )", "status": "Edital Publicado", "salario": 3182.00, "prova": "2026-01-11", "lat": -15.62, "lon": -47.65, "banca": "Instituto ACESS", "requisitos": "Nível Médio.", "link": "https://www.acess.org.br/concurso/1" }
+  ],
+  "aeroportos": [
+    { "nome": "Aeroporto de Curitiba (CWB )", "lat": -25.53, "lon": -49.17 },
+    { "nome": "Aeroporto de S. J. do Rio Preto (SJP)", "lat": -20.81, "lon": -49.40 },
+    { "nome": "Aeroporto de Goiânia (GYN)", "lat": -16.63, "lon": -49.22 },
+    { "nome": "Aeroporto de Manaus (MAO)", "lat": -3.03, "lon": -60.04 },
+    { "nome": "Aeroporto de Congonhas (CGH)", "lat": -23.62, "lon": -46.65 },
+    { "nome": "Aeroporto de Porto Velho (PVH)", "lat": -8.71, "lon": -63.90 },
+    { "nome": "Aeroporto de Natal (NAT)", "lat": -5.76, "lon": -35.36 },
+    { "nome": "Aeroporto de Belém (BEL)", "lat": -1.38, "lon": -48.47 },
+    { "nome": "Aeroporto de Brasília (BSB)", "lat": -15.87, "lon": -47.91 }
+  ]
+}
