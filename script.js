@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     
     // O LINK DO SEU GIST VAI AQUI!
-    const GIST_URL = 'https://gist.github.com/marcelodpimentel-iasolutions/b829f7dfdef0248ed13114f92520d5ab/raw/6a52bf8e6c86d3990758fe433827b696de7b793d/concursos.json';
+    const GIST_URL = 'https://gist.githack.com/marcelodpimentel-iasolutions/b829f7dfdef0248ed13114f92520d5ab/raw/6a52bf8e6c86d3990758fe433827b696de7b793d/concursos.json';
 
     // --- ELEMENTOS DO DOM ---
     const tableBody = document.querySelector('#concursos-table tbody' );
