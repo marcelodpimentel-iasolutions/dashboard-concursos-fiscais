@@ -1,4 +1,4 @@
-// VERSÃO COM FILTRO HISTÓRICO E COLUNA DE VAGAS
+// VERSÃO CORRIGIDA - FILTRO HISTÓRICO E VAGAS
 document.addEventListener('DOMContentLoaded', function () {
     
     const DATA_URL = 'https://raw.githubusercontent.com/marcelodpimentel-iasolutions/dashboard-concursos-fiscais/main/dados.json';
@@ -14,13 +14,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const salaryChartDiv = document.getElementById('salary-chart');
     const mapDiv = document.getElementById('map');
     const updateBtn = document.getElementById('update-btn');
-    const filterContainer = document.querySelector('.filter-container'); // Container dos botões de filtro
+    const filterContainer = document.querySelector('.filter-container');
 
     // --- VARIÁVEIS DE ESTADO ---
     let concursosData = [];
     let aeroportosData = [];
-    let currentFilter = 'atuais'; // Filtro inicial padrão
-    let map; // Variável para guardar a instância do mapa
+    let currentFilter = 'atuais';
+    let map;
 
     // --- FUNÇÕES DE RENDERIZAÇÃO ---
     const renderTable = (data) => {
@@ -51,8 +51,8 @@ document.addEventListener('DOMContentLoaded', function () {
         Plotly.newPlot(salaryChartDiv, plotData, layout, { responsive: true });
     };
 
-    const renderMap = (data) => {
-        if (map) { map.remove(); } // Remove o mapa anterior para recriá-lo
+    const renderMap = (concursosFiltrados) => {
+        if (map) { map.remove(); }
         map = L.map(mapDiv).setView([-15.78, -47.92], 4);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' ).addTo(map);
         
@@ -61,15 +61,21 @@ document.addEventListener('DOMContentLoaded', function () {
         const municipalIcon = createMarkerIcon('#28a745');
         const airportIcon = L.divIcon({ html: `<svg viewBox="0 0 24 24" fill="#333" width="24px" height="24px"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>`, className: 'airport-icon', iconSize: [24, 24], iconAnchor: [12, 12] });
         
-        data.forEach(c => { let iconToUse = stateIcon; if (c.nome.includes('ISS')) { iconToUse = municipalIcon; } L.marker([c.lat, c.lon], { icon: iconToUse }).addTo(map).bindPopup(`<b>${c.nome}</b>`); });
-        aeroportosData.forEach(a => { L.marker([a.lat, a.lon], { icon: airportIcon }).addTo(map).bindPopup(`<b>${a.nome}</b>`); });
+        concursosFiltrados.forEach(c => { let iconToUse = stateIcon; if (c.nome.includes('ISS')) { iconToUse = municipalIcon; } L.marker([c.lat, c.lon], { icon: iconToUse }).addTo(map).bindPopup(`<b>${c.nome}</b>`); });
+        
+        // CORREÇÃO: Filtra os aeroportos para mostrar apenas os relevantes
+        const aeroportosRelevantes = aeroportosData.filter(aeroporto => {
+            return concursosFiltrados.some(concurso => {
+                const distancia = map.distance([aeroporto.lat, aeroporto.lon], [concurso.lat, concurso.lon]);
+                return distancia < 200000; // Mostra aeroportos a menos de 200km de um concurso visível
+            });
+        });
+        aeroportosRelevantes.forEach(a => { L.marker([a.lat, a.lon], { icon: airportIcon }).addTo(map).bindPopup(`<b>${a.nome}</b>`); });
     };
 
     // --- FUNÇÕES DE LÓGICA E EVENTOS ---
     const applyFilters = () => {
         let filteredData = [...concursosData];
-
-        // 1. Aplica o filtro de ano
         if (currentFilter === 'atuais') {
             const statusAtuais = ['Edital Publicado', 'Edital Iminente', 'Autorizado'];
             filteredData = filteredData.filter(c => statusAtuais.includes(c.status));
@@ -77,20 +83,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const year = parseInt(currentFilter, 10);
             filteredData = filteredData.filter(c => c.prova.startsWith(year.toString()));
         }
-
-        // 2. Aplica o filtro de busca textual
         const searchTerm = searchInput.value.toLowerCase();
         if (searchTerm) {
-            filteredData = filteredData.filter(c => 
-                c.nome.toLowerCase().includes(searchTerm) || 
-                c.status.toLowerCase().includes(searchTerm)
-            );
+            filteredData = filteredData.filter(c => c.nome.toLowerCase().includes(searchTerm) || c.status.toLowerCase().includes(searchTerm));
         }
-
-        // 3. Renderiza tudo com os dados filtrados
         renderTable(filteredData);
         renderSalaryChart(filteredData);
-        renderMap(filteredData);
+        renderMap(filteredData); // Passa os dados já filtrados para o mapa
     };
 
     const openModal = (concursoId) => {
@@ -99,16 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
         modalTitle.textContent = concurso.nome;
         const vagasTexto = (concurso.vagas === 'CR' || concurso.vagas > 0) ? concurso.vagas : 'A definir';
         const dataProvaFormatada = concurso.prova !== '9999-12-31' ? new Date(concurso.prova).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : 'A definir';
-        
-        modalBody.innerHTML = `
-            <p><strong>Status:</strong> ${concurso.status}</p>
-            <p><strong>Vagas:</strong> ${vagasTexto}</p>
-            <p><strong>Salário:</strong> R$ ${concurso.salario.toFixed(2).replace('.', ',')}</p>
-            <p><strong>Prova:</strong> ${dataProvaFormatada}</p>
-            <p><strong>Banca:</strong> ${concurso.banca}</p>
-            <p><strong>Requisitos:</strong> ${concurso.requisitos}</p>
-            <p><a href="${concurso.link}" target="_blank">Página do Concurso</a></p>
-        `;
+        modalBody.innerHTML = `<p><strong>Status:</strong> ${concurso.status}</p><p><strong>Vagas:</strong> ${vagasTexto}</p><p><strong>Salário:</strong> R$ ${concurso.salario.toFixed(2).replace('.', ',')}</p><p><strong>Prova:</strong> ${dataProvaFormatada}</p><p><strong>Banca:</strong> ${concurso.banca}</p><p><strong>Requisitos:</strong> ${concurso.requisitos}</p><p><a href="${concurso.link}" target="_blank">Página do Concurso</a></p>`;
         modalOverlay.classList.remove('hidden');
     };
     const closeModal = () => { modalOverlay.classList.add('hidden'); };
@@ -119,28 +109,20 @@ document.addEventListener('DOMContentLoaded', function () {
         searchInput.addEventListener('input', applyFilters);
         updateBtn.addEventListener('click', () => { alert("O Agente de IA foi notificado. As atualizações aparecerão no seu próximo recarregamento da página."); });
         
-        // Lógica de ordenação da tabela
         headers.forEach((header, index) => {
             header.addEventListener('click', () => {
                 const isAsc = header.classList.toggle('asc');
                 const key = ['nome', 'status', 'vagas', 'salario', 'prova'][index];
                 const dataToSort = [...tableBody.rows].map(row => concursosData.find(c => c.id === parseInt(row.dataset.concursoId)));
-                
                 dataToSort.sort((a, b) => {
                     let valA = a[key], valB = b[key];
-                    if (key === 'salario' || key === 'vagas') {
-                        valA = (valA === 'CR') ? 0 : parseFloat(valA) || 0;
-                        valB = (valB === 'CR') ? 0 : parseFloat(valB) || 0;
-                    }
-                    if (valA < valB) return isAsc ? -1 : 1;
-                    if (valA > valB) return isAsc ? 1 : -1;
-                    return 0;
+                    if (key === 'salario' || key === 'vagas') { valA = (valA === 'CR') ? 0 : parseFloat(valA) || 0; valB = (valB === 'CR') ? 0 : parseFloat(valB) || 0; }
+                    if (valA < valB) return isAsc ? -1 : 1; if (valA > valB) return isAsc ? 1 : -1; return 0;
                 });
                 renderTable(dataToSort);
             });
         });
 
-        // Lógica dos botões de filtro de ano
         filterContainer.addEventListener('click', (e) => {
             if (e.target.classList.contains('filter-btn')) {
                 filterContainer.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
@@ -151,19 +133,16 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     };
 
-    // --- FUNÇÃO PRINCIPAL DE INICIALIZAÇÃO ---
     const initializeDashboard = async () => {
         try {
             const urlComAntiCache = `${DATA_URL}?v=${new Date().getTime()}`;
             const response = await fetch(urlComAntiCache);
             if (!response.ok) { throw new Error(`HTTP error! status: ${response.status}`); }
             const data = await response.json();
-            
             concursosData = data.concursos;
             aeroportosData = data.aeroportos;
-
             setupEventListeners();
-            applyFilters(); // Aplica o filtro inicial ('atuais')
+            applyFilters();
         } catch (error) {
             console.error("Falha ao inicializar o dashboard:", error);
             document.body.innerHTML = '<h1>Erro ao carregar dados. Verifique o console.</h1>';
