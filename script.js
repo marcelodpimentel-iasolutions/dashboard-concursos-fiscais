@@ -1,4 +1,4 @@
-// VERSÃO CORRIGIDA - FILTRO HISTÓRICO E VAGAS
+// VERSÃO COM DESTAQUE NO MAPA E DEMAIS FUNCIONALIDADES
 document.addEventListener('DOMContentLoaded', function () {
     
     const DATA_URL = 'https://raw.githubusercontent.com/marcelodpimentel-iasolutions/dashboard-concursos-fiscais/main/dados.json';
@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let aeroportosData = [];
     let currentFilter = 'atuais';
     let map;
+    let mapMarkers = {}; // NOVO: Objeto para armazenar os marcadores do mapa
 
     // --- FUNÇÕES DE RENDERIZAÇÃO ---
     const renderTable = (data) => {
@@ -40,6 +41,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 <td>${dataProvaFormatada}</td>
             `;
             row.addEventListener('click', () => openModal(c.id));
+
+            // NOVO: Adiciona eventos de mouse para destacar o marcador no mapa
+            row.addEventListener('mouseenter', () => {
+                const marker = mapMarkers[c.id];
+                if (marker) {
+                    marker.getElement().classList.add('highlight-marker');
+                }
+            });
+            row.addEventListener('mouseleave', () => {
+                const marker = mapMarkers[c.id];
+                if (marker) {
+                    marker.getElement().classList.remove('highlight-marker');
+                }
+            });
+
             tableBody.appendChild(row);
         });
     };
@@ -56,18 +72,24 @@ document.addEventListener('DOMContentLoaded', function () {
         map = L.map(mapDiv).setView([-15.78, -47.92], 4);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' ).addTo(map);
         
+        mapMarkers = {}; // NOVO: Limpa os marcadores antigos
+
         const createMarkerIcon = (color) => { const markerHtml = `<svg viewBox="0 0 32 32" style="fill:${color}; stroke:black; stroke-width:1; stroke-opacity:0.5; opacity:0.8;"><path d="M16 32s16-15.5 16-24C32 7.163 24.837 0 16 0S0 7.163 0 8c0 8.5 16 24 16 24z"/><circle cx="16" cy="12" r="6" fill="white"/></svg>`; return L.divIcon({ html: markerHtml, className: '', iconSize: [28, 28], iconAnchor: [14, 28], popupAnchor: [0, -28] }); };
         const stateIcon = createMarkerIcon('#007bff');
         const municipalIcon = createMarkerIcon('#28a745');
         const airportIcon = L.divIcon({ html: `<svg viewBox="0 0 24 24" fill="#333" width="24px" height="24px"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>`, className: 'airport-icon', iconSize: [24, 24], iconAnchor: [12, 12] });
         
-        concursosFiltrados.forEach(c => { let iconToUse = stateIcon; if (c.nome.includes('ISS')) { iconToUse = municipalIcon; } L.marker([c.lat, c.lon], { icon: iconToUse }).addTo(map).bindPopup(`<b>${c.nome}</b>`); });
+        concursosFiltrados.forEach(c => {
+            let iconToUse = stateIcon;
+            if (c.nome.includes('ISS')) { iconToUse = municipalIcon; }
+            const marker = L.marker([c.lat, c.lon], { icon: iconToUse }).addTo(map).bindPopup(`<b>${c.nome}</b>`);
+            mapMarkers[c.id] = marker; // NOVO: Armazena a referência do marcador
+        });
         
-        // CORREÇÃO: Filtra os aeroportos para mostrar apenas os relevantes
         const aeroportosRelevantes = aeroportosData.filter(aeroporto => {
             return concursosFiltrados.some(concurso => {
                 const distancia = map.distance([aeroporto.lat, aeroporto.lon], [concurso.lat, concurso.lon]);
-                return distancia < 200000; // Mostra aeroportos a menos de 200km de um concurso visível
+                return distancia < 200000;
             });
         });
         aeroportosRelevantes.forEach(a => { L.marker([a.lat, a.lon], { icon: airportIcon }).addTo(map).bindPopup(`<b>${a.nome}</b>`); });
@@ -89,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         renderTable(filteredData);
         renderSalaryChart(filteredData);
-        renderMap(filteredData); // Passa os dados já filtrados para o mapa
+        renderMap(filteredData);
     };
 
     const openModal = (concursoId) => {
@@ -145,9 +167,4 @@ document.addEventListener('DOMContentLoaded', function () {
             applyFilters();
         } catch (error) {
             console.error("Falha ao inicializar o dashboard:", error);
-            document.body.innerHTML = '<h1>Erro ao carregar dados. Verifique o console.</h1>';
-        }
-    };
-
-    initializeDashboard();
-});
+            document.body.
