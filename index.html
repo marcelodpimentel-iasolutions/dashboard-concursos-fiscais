@@ -8,7 +8,7 @@
     <!-- Dependências Externas -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> <!-- Plotly para os gráficos -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     
     <link rel="stylesheet" href="style.css">
 </head>
@@ -21,6 +21,15 @@
         </button>
         
         <h2>Mapa de Oportunidades</h2>
+        
+        <!-- NOVA SEÇÃO DE FILTROS POR ANO -->
+        <div class="filter-container">
+            <button class="filter-btn active" data-year="atuais">Atuais</button>
+            <button class="filter-btn" data-year="todos">Todos</button>
+            <button class="filter-btn" data-year="2024">2024</button>
+            <button class="filter-btn" data-year="2023">2023</button>
+        </div>
+
         <div id="map"></div>
         
         <h2>Tabela de Concursos</h2>
@@ -30,6 +39,7 @@
                 <tr>
                     <th>Concurso</th>
                     <th>Status</th>
+                    <th>Vagas</th>
                     <th>Salário Inicial</th>
                     <th>Data da Prova</th>
                 </tr>
@@ -39,7 +49,6 @@
             </tbody>
         </table>
 
-        <!-- NOVA SEÇÃO DE GRÁFICOS -->
         <h2>Visualizações</h2>
         <div id="salary-chart"></div>
 
@@ -57,4 +66,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
