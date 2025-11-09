@@ -25,7 +25,7 @@ h1, h2 {
     width: 100%;
     border: 1px solid #ccc;
     border-radius: 8px;
-    margin-top: 20px; /* Adicionado para dar espaço aos filtros */
+    margin-top: 20px;
     margin-bottom: 25px;
 }
 
@@ -76,10 +76,11 @@ h1, h2 {
     text-align: center; 
     display: inline-block; 
 }
-.status-publicado { background-color: #28a745; }
-.status-iminente { background-color: #ffc107; color: #333; }
+/* CORREÇÃO: Classes renomeadas para corresponder ao JS */
+.status-edital-publicado { background-color: #28a745; }
+.status-edital-iminente { background-color: #ffc107; color: #333; }
 .status-autorizado { background-color: #17a2b8; }
-.status-realizado { background-color: #6c757d; } /* Novo status para concursos passados */
+.status-realizado { background-color: #6c757d; }
 
 /* Estilos do Modal */
 .hidden { display: none !important; }
@@ -102,29 +103,8 @@ h1, h2 {
 #update-btn.loading svg { animation: spin 1s linear infinite; }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } }
 
-/* NOVOS ESTILOS PARA OS BOTÕES DE FILTRO */
-.filter-container {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 0; /* Ajustado */
-}
-.filter-btn {
-    padding: 8px 16px;
-    font-size: 14px;
-    font-weight: 600;
-    border: 2px solid #007bff;
-    background-color: #fff;
-    color: #007bff;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-.filter-btn:hover {
-    background-color: #007bff;
-    color: #fff;
-}
-.filter-btn.active {
-    background-color: #007bff;
-    color: #fff;
-}
+/* Estilos para os Botões de Filtro */
+.filter-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 0; }
+.filter-btn { padding: 8px 16px; font-size: 14px; font-weight: 600; border: 2px solid #007bff; background-color: #fff; color: #007bff; border-radius: 20px; cursor: pointer; transition: all 0.3s ease; }
+.filter-btn:hover { background-color: #007bff; color: #fff; }
+.filter-btn.active { background-color: #007bff; color: #fff; }
